@@ -1,3 +1,6 @@
 /.idea
 /.env
 gotbot.db*
+gotbotPlugins.db*
+custom/plugins/*
+!custom/plugins/type_hint_helper.js
