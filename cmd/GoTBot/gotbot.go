@@ -1,18 +1,19 @@
 package GoTBot
 
 import (
-	"github.com/3stadt/GoTBot/src/structs"
-	"github.com/joho/godotenv"
-	"log"
-	"github.com/3stadt/GoTBot/src/queue"
-	"github.com/3stadt/GoTBot/src/handlers"
-	"strconv"
 	"io/ioutil"
+	"log"
 	"os"
-	"github.com/BurntSushi/toml"
+	"strconv"
+
 	"github.com/3stadt/GoTBot/src/db"
-	"github.com/3stadt/GoTBot/src/twitch"
+	"github.com/3stadt/GoTBot/src/handlers"
+	"github.com/3stadt/GoTBot/src/queue"
 	"github.com/3stadt/GoTBot/src/res"
+	"github.com/3stadt/GoTBot/src/structs"
+	"github.com/3stadt/GoTBot/src/twitch"
+	"github.com/BurntSushi/toml"
+	"github.com/joho/godotenv"
 )
 
 const serverSSL = "irc.chat.twitch.tv:443"
@@ -53,7 +54,7 @@ func connectToTwitch(p *db.Pool, rs *res.Vars) (twitch.Client, error) {
 	return tw, nil
 }
 
-func initPlugins() (error) {
+func initPlugins() error {
 	files, err := ioutil.ReadDir("./custom/plugins")
 	if err != nil {
 		return err
