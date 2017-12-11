@@ -1,0 +1,3 @@
+[[command]]
+name = "slap"
+entry_script = "slap.js"

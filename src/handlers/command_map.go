@@ -20,8 +20,8 @@ type deps struct {
 }
 
 var commandMap = map[string]func(*deps) error{
-	"goSay":    (*deps).Echo,
-	"slap":     (*deps).Slap,
+	"goSay": (*deps).Echo,
+	//"slap":     (*deps).Slap,
 	"stats":    (*deps).Stats,
 	"shutdown": (*deps).Stop,
 	"stop":     (*deps).Stop,

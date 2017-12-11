@@ -21,7 +21,10 @@ const customPluginPath = "./plugins/custom/"
 const enginePluginPath = "./plugins/engine/"
 
 func Run() {
-	_ = initPlugins()
+	err := initCustomPlugins()
+	checkErr(err)
+	err = initEnginePlugins()
+	checkErr(err)
 	p := &db.Pool{
 		DbFile:       "gotbot.db",
 		PluginDbFile: "gotbotPlugins.db",
