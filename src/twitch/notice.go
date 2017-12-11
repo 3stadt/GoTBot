@@ -1,8 +1,9 @@
 package twitch
 
 import (
-	"github.com/thoj/go-ircevent"
 	"strings"
+
+	"github.com/thoj/go-ircevent"
 )
 
 func (c *Client) Notice(e *irc.Event) {

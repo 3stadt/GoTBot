@@ -1,17 +1,18 @@
 package handlers
 
 import (
-	"os"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"os"
+	"path/filepath"
+
+	"github.com/3stadt/GoTBot/src/db"
+	"github.com/3stadt/GoTBot/src/errors"
+	"github.com/3stadt/GoTBot/src/res"
 	"github.com/robertkrimen/otto"
 	_ "github.com/robertkrimen/otto/underscore"
 	"github.com/thoj/go-ircevent"
-	"encoding/json"
-	"fmt"
-	"github.com/3stadt/GoTBot/src/db"
-	"github.com/3stadt/GoTBot/src/errors"
-	"path/filepath"
-	"github.com/3stadt/GoTBot/src/res"
 )
 
 func JsPlugin(filePath string, channel string, sender string, params string, connection *irc.Connection, p *db.Pool, v *res.Vars) error {

@@ -1,12 +1,13 @@
 package db
 
 import (
-	"github.com/asdine/storm"
-	"github.com/3stadt/GoTBot/src/structs"
-	"github.com/imdario/mergo"
-	"github.com/3stadt/GoTBot/src/errors"
-	"time"
 	"strings"
+	"time"
+
+	"github.com/3stadt/GoTBot/src/errors"
+	"github.com/3stadt/GoTBot/src/structs"
+	"github.com/asdine/storm"
+	"github.com/imdario/mergo"
 )
 
 type Pool struct {

@@ -17,6 +17,8 @@ import (
 )
 
 const serverSSL = "irc.chat.twitch.tv:443"
+const customPluginPath = "./plugins/custom/"
+const enginePluginPath = "./plugins/engine/"
 
 func Run() {
 	_ = initPlugins()
@@ -54,15 +56,23 @@ func connectToTwitch(p *db.Pool, rs *res.Vars) (twitch.Client, error) {
 	return tw, nil
 }
 
-func initPlugins() error {
-	files, err := ioutil.ReadDir("./custom/plugins")
+func initCustomPlugins() error {
+	return initPlugins(customPluginPath)
+}
+
+func initEnginePlugins() error {
+	return initPlugins(enginePluginPath)
+}
+
+func initPlugins(folder string) error {
+	files, err := ioutil.ReadDir(folder)
 	if err != nil {
 		return err
 	}
 	for _, file := range files {
 		if file.IsDir() {
-			if _, err := os.Stat("./custom/plugins/" + file.Name() + "/config.toml"); !os.IsNotExist(err) {
-				tomlData, err := ioutil.ReadFile("./custom/plugins/" + file.Name() + "/config.toml")
+			if _, err := os.Stat(folder + file.Name() + "/config.toml"); !os.IsNotExist(err) {
+				tomlData, err := ioutil.ReadFile(folder + file.Name() + "/config.toml")
 				if err != nil {
 					log.Fatal(err)
 					continue
@@ -73,9 +83,9 @@ func initPlugins() error {
 				}
 				for _, c := range commands.Command {
 					if _, ok := handlers.PluginCommandMap[c.Name]; ok {
-						handlers.PluginCommandMap[c.Name] = append(handlers.PluginCommandMap[c.Name], "./custom/plugins/"+file.Name()+"/"+c.EntryScript)
+						handlers.PluginCommandMap[c.Name] = append(handlers.PluginCommandMap[c.Name], folder+file.Name()+"/"+c.EntryScript)
 					} else {
-						handlers.PluginCommandMap[c.Name] = []string{"./custom/plugins/" + file.Name() + "/" + c.EntryScript}
+						handlers.PluginCommandMap[c.Name] = []string{folder + file.Name() + "/" + c.EntryScript}
 					}
 				}
 			}

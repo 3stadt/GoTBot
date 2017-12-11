@@ -1,12 +1,13 @@
 package handlers
 
 import (
-	"github.com/thoj/go-ircevent"
-	"github.com/3stadt/GoTBot/src/db"
-	"github.com/3stadt/GoTBot/src/res"
 	"fmt"
-	"github.com/3stadt/GoTBot/src/structs"
+
+	"github.com/3stadt/GoTBot/src/db"
 	"github.com/3stadt/GoTBot/src/errors"
+	"github.com/3stadt/GoTBot/src/res"
+	"github.com/3stadt/GoTBot/src/structs"
+	"github.com/thoj/go-ircevent"
 )
 
 type deps struct {

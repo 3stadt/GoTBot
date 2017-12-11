@@ -1,10 +1,11 @@
 package twitch
 
 import (
-	"github.com/thoj/go-ircevent"
 	"strings"
-	"github.com/3stadt/GoTBot/src/res"
+
 	"github.com/3stadt/GoTBot/src/db"
+	"github.com/3stadt/GoTBot/src/res"
+	"github.com/thoj/go-ircevent"
 )
 
 type Client struct {

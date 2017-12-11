@@ -1,9 +1,10 @@
 package handlers
 
 import (
+	"math/rand"
 	"strings"
 	"time"
-	"math/rand"
+
 	"github.com/3stadt/GoTBot/src/errors"
 )
 

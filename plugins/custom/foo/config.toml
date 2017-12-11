@@ -1,0 +1,9 @@
+foo = "bar"
+
+[[command]]
+name = "foo"
+entry_script = "bar.js"
+
+[[command]]
+name = "bar"
+entry_script = "bar.js"
