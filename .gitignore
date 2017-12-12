@@ -1,5 +1,6 @@
 /.idea
 /.env
+/vendor
 gotbot.db*
 gotbotPlugins.db*
 plugins/custom/*
