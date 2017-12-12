@@ -1,10 +1,16 @@
 package GoTBot
 
 import (
+	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
+	"os/signal"
 	"strconv"
+	"syscall"
+	"time"
 
 	"github.com/3stadt/GoTBot/src/db"
 	"github.com/3stadt/GoTBot/src/handlers"
@@ -13,7 +19,9 @@ import (
 	"github.com/3stadt/GoTBot/src/structs"
 	"github.com/3stadt/GoTBot/src/twitch"
 	"github.com/BurntSushi/toml"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/phayes/freeport"
 )
 
 const serverSSL = "irc.chat.twitch.tv:443"
@@ -21,6 +29,8 @@ const customPluginPath = "./plugins/custom/"
 const enginePluginPath = "./plugins/engine/"
 
 func Run() {
+	ircIsConnected := false
+	var tw twitch.Client
 	err := initCustomPlugins()
 	checkErr(err)
 	err = initEnginePlugins()
@@ -37,9 +47,62 @@ func Run() {
 		Constants: res.GetConst(),
 	}
 	checkErr(err)
-	tw, err := connectToTwitch(p, rs)
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.GET("/connect", func(c *gin.Context) {
+		if ircIsConnected == true {
+			c.JSON(200, gin.H{
+				"success": false,
+				"message": "Twitch is already connected",
+			})
+			return
+		}
+		ircIsConnected = true
+		tw, err = connectToTwitch(p, rs)
+		if err != nil {
+			ircIsConnected = false
+		}
+		c.JSON(200, gin.H{
+			"success": true,
+		})
+	})
+	r.GET("/disconnect", func(c *gin.Context) {
+		ircIsConnected = false
+		tw.Connection.Quit()
+		c.JSON(200, gin.H{
+			"success": true,
+		})
+	})
+	port, err := freeport.GetFreePort()
+	fmt.Printf("Serving on port %d\n", port)
 	checkErr(err)
-	tw.Connection.Loop()
+	srv := &http.Server{
+		Addr:    ":" + strconv.Itoa(port),
+		Handler: r,
+	}
+	go func() {
+		// service connections
+		if err := srv.ListenAndServe(); err != nil {
+			log.Printf("listen: %s\n", err)
+		}
+	}()
+	quit := make(chan os.Signal, 2)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+	<-quit
+	if ircIsConnected {
+		tw.Connection.Quit()
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	srv.Shutdown(ctx)
+	if err := srv.Shutdown(ctx); err != nil {
+		log.Fatal("Server Shutdown:", err)
+	}
+	log.Println("Server exiting")
 }
 
 func connectToTwitch(p *db.Pool, rs *res.Vars) (twitch.Client, error) {
@@ -55,7 +118,7 @@ func connectToTwitch(p *db.Pool, rs *res.Vars) (twitch.Client, error) {
 	}
 	queue.NewQueue(rs.Constants.CommandQueueName)
 	go queue.HandleCommand(queue.JobQueue[rs.Constants.CommandQueueName], tw.Connection, p, rs)
-	tw.Connect()
+	go tw.Connect()
 	return tw, nil
 }
 
