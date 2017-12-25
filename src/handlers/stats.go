@@ -1,8 +1,8 @@
 package handlers
 
 import (
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func (d *deps) Stats() error {

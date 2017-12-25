@@ -1,10 +1,11 @@
 package twitch
 
 import (
-	"github.com/thoj/go-ircevent"
 	"strings"
 	"time"
+
 	"github.com/3stadt/GoTBot/src/structs"
+	"github.com/thoj/go-ircevent"
 )
 
 func (c *Client) Join(e *irc.Event) {

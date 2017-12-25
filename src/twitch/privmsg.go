@@ -1,11 +1,12 @@
 package twitch
 
 import (
-	"github.com/thoj/go-ircevent"
 	"strings"
+
 	"github.com/3stadt/GoTBot/src/handlers"
 	"github.com/3stadt/GoTBot/src/queue"
 	"github.com/3stadt/GoTBot/src/structs"
+	"github.com/thoj/go-ircevent"
 )
 
 func (c *Client) Privmsg(e *irc.Event) {
